@@ -3,7 +3,7 @@
 
 ## Boundaries (Prohibited Actions)
 
-- Don't change or commit `.env*` files (except `.env.example`)
+- Don't change or commit `.env*` files (except `.env.example` / `.env.example.*`)
 - Don't edit anything inside the `node_modules`, `vendor/` directory
 - Always ask for confirmation before changing production environment config files
 

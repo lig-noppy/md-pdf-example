@@ -6,8 +6,13 @@
 cd doc/spec-md
 
 # 事前準備 (初回のみ)
-cp .env.example .env
-vi .env
+```
+# Linux / WSL2:
+cp .env.example.linux .env
+
+# Windows:
+cp .env.example.win .env
+```
 
 # 事前準備2 (optional)
 cp work/style.example.css work/style.css

@@ -29,6 +29,19 @@ docker pull ghcr.io/lig-noppy/md-pdf:latest
 
 `doc/spec-md/` フォルダで実行する。`compose.yaml` は上記 GHCR イメージを参照する。
 
+### 初回セットアップ (.env)
+
+プラットフォーム別のサンプルから `.env` を作成する。
+
+| 環境 | コマンド |
+|------|----------|
+| Linux / WSL2 (bash) | `cp .env.example.linux .env` |
+| Windows (PowerShell / cmd) | `cp .env.example.win .env` |
+
+Linux / WSL2 では `UID` / `GID` をホストユーザーに合わせる（`id -u` / `id -g`）。Windows では `init-env.ps1` が `WORK_VOLUME_SOURCE`（`/mnt/c/...`）を自動設定する。
+
+`COMPOSE_CONVERT_WINDOWS_PATHS=1` は**使わない**こと（誤ったマウントになる）。
+
 ```bash
 cd doc/spec-md
 
@@ -36,19 +49,12 @@ cd doc/spec-md
 docker compose pull
 
 # 変換（全対象）
-docker compose run --rm md-pdf
+docker compose run --rm md-pdf convert
 
 # オプション付き
-docker compose run --rm md-pdf --no-cache
-docker compose run --rm md-pdf --target 09_example/sample01.md
-docker compose run --rm md-pdf --dry-run
-```
-
-Linux / WSL2 では出力ファイルの所有者を揃えるため、`.env` にホストの UID/GID を設定する（未設定時は `1000:1000`）。`.env.example` をコピーして利用できる。
-
-```env
-UID=1000
-GID=1000
+docker compose run --rm md-pdf convert --no-cache
+docker compose run --rm md-pdf convert --target 09_example/sample01.md
+docker compose run --rm md-pdf convert --dry-run
 ```
 
 ### docker run
@@ -96,7 +102,8 @@ docker run --rm -u "$(id -u):$(id -g)" --env-file .env -v "$PWD/work":/work ghcr
 ## ディレクトリ構成
 
 ```
-.env.example            環境変数のサンプル (.env にコピーして利用)
+.env.example.linux      Linux / WSL2 向け .env サンプル
+.env.example.win        Windows 向け .env サンプル
 compose.yaml            Docker Compose 定義 (GHCR イメージ参照)
 work/                   Dockerコンテナにマウントするフォルダ
   .cache/               DLしたパッケージやライブラリ、中間ファイル等をキャッシュするフォルダ
